@@ -1,5 +1,0 @@
-[] Refactor the code. Make it cleaner.
-[] Handle list index out of range errors, for the script input parameters parsing.
-
-[] Implement a boolean model for searching
-[] Implement a function to parse a query for the boolean model
