@@ -116,6 +116,24 @@ def provide_answer(ans_post_list, document_list):
             print (document_list[tup[0]])
 
 
+def print_help(commands):
+    padding = max( list(map(lambda x: len(x), commands.keys())) )
+    print ("\n< Help >")
+    # print ("For exit input: <;>.")
+    # print ("Show the inverted index: <;index>")
+    # print ("Show the document IDs: <;docid>")
+    # print ("Help: <;help>")
+    for k, v in commands.items():
+        print (k + " " * (padding + 2 - len(k)) + "-", v)
+
+
+commands = {
+    "Exit": ";;",
+    "Index": ";;index",
+    "Docid": ";;docid",
+    "Help": ";;help"
+}
+
 # TODO: Implement a boolean model for searching
 # TODO: Implement a function to parse a query
 
@@ -142,20 +160,29 @@ if __name__ == '__main__':
         query = "Text"
 
 
-    print_inverted_index(inv_index)
+    # print_inverted_index(inv_index)
 
-    print_docIds (doc_list)
+    # print_docIds (doc_list)
 
     print ("\nSearch: " + query)
 
     post_list = get_answered_posting_list(query, inv_index)
     provide_answer(post_list, doc_list)
 
+    # print_help(commands)
 
-    print ("\nFor exit input <;>.")
     query = input("\nSearch: ")
-    while query != ";":
-        post_list = get_answered_posting_list(query, inv_index)
-        provide_answer(post_list, doc_list)
+    while query != commands["Exit"]:
+        if query in commands.values():
+            if query == commands["Help"]:
+                print_help(commands)
+            elif query == commands["Index"]:
+                print_inverted_index(inv_index)
+            elif query == commands["Docid"]:
+                print_docIds(doc_list)
+        else:
+            post_list = get_answered_posting_list(query, inv_index)
+            provide_answer(post_list, doc_list)
+
 
         query = input("\nSearch: ")
