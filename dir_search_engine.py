@@ -107,8 +107,8 @@ def get_answered_posting_list(query_term, inverted_index):
     return ans_post_list
 
 
-def provide_answer(ans_post_list, document_list):
-    print ("\n< Answer >")
+def print_results(ans_post_list, document_list):
+    print ("\n< Results >")
     if not ans_post_list:
         print ("No documents found!")
     else:
@@ -137,10 +137,10 @@ commands = {
 
 if __name__ == '__main__':
     # This is the directory in which we will make the search.
-    if len(sys.argv) > 1:
-        collection_directory = sys.argv[1]
+    if "-d" in sys.argv:
+        collection_directory = sys.argv[sys.argv.index("-d") + 1]
     else:
-        collection_directory = "DocumentCollection"
+        collection_directory = "."
 
 
     col_path = make_path_to_collection(collection_directory)
@@ -150,24 +150,21 @@ if __name__ == '__main__':
     inv_index = build_inverted_index(col_path, doc_list)
 
 
-
-    # Parse the query from user input.
-    if len(sys.argv) > 2:
-        query = sys.argv[2]
-    else:
-        query = "Text"
-
-
     # print_inverted_index(inv_index)
 
     # print_docIds (doc_list)
 
-    print ("\nSearch: " + query)
 
-    post_list = get_answered_posting_list(query, inv_index)
-    provide_answer(post_list, doc_list)
+    # Parse the query from user input.
+    if "-q" in sys.argv:
+        query = sys.argv[sys.argv.index("-q") + 1]
+        print ("\nSearch: " + query)
+        post_list = get_answered_posting_list(query, inv_index)
+        print_results(post_list, doc_list)
+        sys.exit(0)
 
-    # print_help(commands)
+
+    print_help(commands)
 
     query = input("\nSearch: ")
     while query != commands["Exit"]:
@@ -180,6 +177,6 @@ if __name__ == '__main__':
                 print_docIds(doc_list)
         else:
             post_list = get_answered_posting_list(query, inv_index)
-            provide_answer(post_list, doc_list)
+            print_results(post_list, doc_list)
 
         query = input("\nSearch: ")
