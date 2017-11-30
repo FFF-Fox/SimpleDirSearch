@@ -1,0 +1,3 @@
+[] Refactor the code. Make it cleaner.
+[] Implement a boolean model for searching
+[] Implement a function to parse a query for the boolean model

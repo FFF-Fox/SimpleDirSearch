@@ -134,8 +134,6 @@ commands = {
     "Help": ";;help"
 }
 
-# TODO: Implement a boolean model for searching
-# TODO: Implement a function to parse a query
 
 if __name__ == '__main__':
     # This is the directory in which we will make the search.
@@ -183,6 +181,5 @@ if __name__ == '__main__':
         else:
             post_list = get_answered_posting_list(query, inv_index)
             provide_answer(post_list, doc_list)
-
 
         query = input("\nSearch: ")
