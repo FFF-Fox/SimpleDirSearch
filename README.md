@@ -3,7 +3,7 @@
 
 ## This is a simple search engine that you can use to search for terms, within the documents of a specified directory.
 
-###### Uses:
+### Uses:
   - Run the search engine in a CLI, where you can try subsequent searches.
   ```
   $ python dir_search_engine.py
@@ -18,5 +18,5 @@
   $ python dir_search_engine.py -d DocumentCollection -q Query
   ```
 
-###### This is a work in progress.
+### This is a work in progress.
 Currently one can search using a single term. There will be an implementation of a boolean search model, where one will be able to search using AND, OR, and NOT to make more sophisticated queries.
