@@ -1,8 +1,8 @@
 # SimpleDirSearch: A minimal directory search engine
 
-```html
-<h3> This is a simple search engine that you can use to search for terms,
-within the documents of a specified directory. </h3>
+
+This is a simple search engine that you can use to search for terms,
+within the documents of a specified directory.
 
 Uses:
   * The default behaviour of running the script without specifying parameters
