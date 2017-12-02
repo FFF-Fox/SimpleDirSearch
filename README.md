@@ -19,4 +19,4 @@
   ```
 
 ### This is a work in progress.
-Currently one can search using a single term. There will be an implementation of a boolean search model, where one will be able to search using AND, OR, and NOT to make more sophisticated queries.
+Currently one can search using many terms separated by ```^``` for logical AND. eg: ```Search: term1 ^ term2 ^ term3``` There will be an implementation of a boolean search model, where one will be able to search using AND, OR, and NOT to make more sophisticated queries.
