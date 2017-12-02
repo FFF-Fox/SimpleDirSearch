@@ -96,24 +96,24 @@ def print_docIds(document_list):
         print (str(i) + lpadding + " - " + doc)
 
 
-def get_answered_posting_list(query_term, inverted_index):
+def get_term_docids(query_term, inverted_index):
     filt_query_term = filter_string(query_term)
 
     if filt_query_term in inverted_index:
-        ans_post_list = inverted_index[filt_query_term]
+        results_docids = [ tup[0] for tup in inverted_index[filt_query_term] ]
     else:
-        ans_post_list = []
+        results_docids = []
 
-    return ans_post_list
+    return results_docids
 
 
-def print_results(ans_post_list, document_list):
+def print_results(results_docids, document_list):
     print ("\n< Results >")
-    if not ans_post_list:
+    if not results_docids:
         print ("No documents found!")
     else:
-        for tup in ans_post_list:
-            print (document_list[tup[0]])
+        for i in results_docids:
+            print (document_list[i])
 
 
 def print_help(commands):
@@ -127,12 +127,30 @@ def print_help(commands):
         print (k + " " * (padding + 2 - len(k)) + "-", v)
 
 
-commands = {
-    "Exit": ";;",
-    "Index": ";;index",
-    "Docid": ";;docid",
-    "Help": ";;help"
-}
+def cli():
+    commands = {
+        "Exit": ";;",
+        "Index": ";;index",
+        "Docid": ";;docid",
+        "Help": ";;help"
+    }
+
+    print_help(commands)
+
+    query = input("\nSearch: ")
+    while query != commands["Exit"]:
+        if query in commands.values():
+            if query == commands["Help"]:
+                print_help(commands)
+            elif query == commands["Index"]:
+                print_inverted_index(inv_index)
+            elif query == commands["Docid"]:
+                print_docIds(doc_list)
+        else:
+            post_list = get_term_docids(query, inv_index)
+            print_results(post_list, doc_list)
+
+        query = input("\nSearch: ")
 
 
 if __name__ == '__main__':
@@ -159,24 +177,8 @@ if __name__ == '__main__':
     if "-q" in sys.argv:
         query = sys.argv[sys.argv.index("-q") + 1]
         print ("\nSearch: " + query)
-        post_list = get_answered_posting_list(query, inv_index)
+        post_list = get_term_docids(query, inv_index)
         print_results(post_list, doc_list)
         sys.exit(0)
-
-
-    print_help(commands)
-
-    query = input("\nSearch: ")
-    while query != commands["Exit"]:
-        if query in commands.values():
-            if query == commands["Help"]:
-                print_help(commands)
-            elif query == commands["Index"]:
-                print_inverted_index(inv_index)
-            elif query == commands["Docid"]:
-                print_docIds(doc_list)
-        else:
-            post_list = get_answered_posting_list(query, inv_index)
-            print_results(post_list, doc_list)
-
-        query = input("\nSearch: ")
+    else:
+        cli()
