@@ -97,15 +97,30 @@ def print_docIds(document_list):
 
 
 def get_term_docids(query_term, inverted_index):
-    filt_query_term = filter_string(query_term)
+    # filt_query_term = filter_string(query_term)
 
-    if filt_query_term in inverted_index:
-        results_docids = [ tup[0] for tup in inverted_index[filt_query_term] ]
+    if query_term in inverted_index:
+        results_docids = [ tup[0] for tup in inverted_index[query_term] ]
     else:
         results_docids = []
 
     return results_docids
 
+
+def process_query(query, inverted_index):
+    and_terms = query.split("^")
+    filt_terms = [ filter_string(x).strip() for x in and_terms ]
+    # Debugging
+    # print (filt_terms)
+    sets = [ set( get_term_docids(term, inverted_index) ) for term in filt_terms ]
+
+    doc_intersec = sets[0]
+    for S in sets:
+        doc_intersec &= S
+        # Debugging
+        # print (doc_intersec)
+
+    return list(doc_intersec)
 
 def print_results(results_docids, document_list):
     print ("\n< Results >")
@@ -119,10 +134,6 @@ def print_results(results_docids, document_list):
 def print_help(commands):
     padding = max( list(map(lambda x: len(x), commands.keys())) )
     print ("\n< Help >")
-    # print ("For exit input: <;>.")
-    # print ("Show the inverted index: <;index>")
-    # print ("Show the document IDs: <;docid>")
-    # print ("Help: <;help>")
     for k, v in commands.items():
         print (k + " " * (padding + 2 - len(k)) + "-", v)
 
@@ -147,8 +158,8 @@ def cli():
             elif query == commands["Docid"]:
                 print_docIds(doc_list)
         else:
-            post_list = get_term_docids(query, inv_index)
-            print_results(post_list, doc_list)
+            result = process_query(query, inv_index)
+            print_results(result, doc_list)
 
         query = input("\nSearch: ")
 
@@ -160,25 +171,22 @@ if __name__ == '__main__':
     else:
         collection_directory = "."
 
-
+    # Build the inverted index and keep the doc_list for later use.
     col_path = make_path_to_collection(collection_directory)
-
     doc_list = get_document_list(col_path)
-
     inv_index = build_inverted_index(col_path, doc_list)
-
-
-    # print_inverted_index(inv_index)
-
-    # print_docIds (doc_list)
-
 
     # Parse the query from user input.
     if "-q" in sys.argv:
         query = sys.argv[sys.argv.index("-q") + 1]
         print ("\nSearch: " + query)
-        post_list = get_term_docids(query, inv_index)
-        print_results(post_list, doc_list)
+        result = process_query(query, inv_index)
+        print_results(result, doc_list)
         sys.exit(0)
     else:
         cli()
+
+        # Testing process_query()
+        # query = "b ^ hard"
+        # result = process_query(query, inv_index)
+        # print_results(result, doc_list)
