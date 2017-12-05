@@ -4,28 +4,35 @@ from collections import Counter
 
 
 class Engine:
-    def __init__(self, collection_path='.', rf=True):
+    def __init__(self, collection_path='.', excluded=[], rf=True):
         self.inverted_index = {}
         self.documents = []
 
-        self.make_doclist_from(collection_path, rf)
-        self.build_inverted_index()
+        self.build_index_from(collection_path, excluded, rf)
 
 
-    def make_doclist_from(self, collection_path, rf=True):
+    def make_doclist_from(self, collection_path, excluded=[], rf=True):
         """ Creates the list containing the paths for the documents in the collection.
             Inputs:
                 collection_path: The path of the collection, from which the
                     inverted idex will be built.
                 rf: Whether to check the current directory and all subsequent
                 subdirectories, or just the current one.
+                excluded: List of excluded files or paths.
         """
         self.documents = []
 
         # Fill self.documents with the paths of the files in the given
         # collection_path and it's subdirectories
         for (dirpath, dirnames, filenames) in walk(collection_path):
-            self.documents.extend([dirpath +'/'+ filename for filename in filenames])
+            self.documents.extend([ dirpath +'/'+ filename
+                                    for filename in filenames
+                                    if not any( ex in dirpath.split('/')
+                                                or ex == dirpath
+                                                or ex == filename
+                                                or ex == dirpath +'/'+ filename
+                                                for ex in excluded )
+                                    ])
             if not rf:
                 break
 
@@ -94,6 +101,12 @@ class Engine:
             self.inverted_index[term].sort()
 
 
+    def build_index_from(self, collection_path, excluded=[], rf=True):
+        """ Build the inverted index from the given collection path. """
+        self.make_doclist_from(collection_path, excluded, rf)
+        self.build_inverted_index()
+
+
     def print_inverted_index(self):
         """ Prints the inverted index in an easy for the eye form. """
         terms = self.inverted_index.keys()
@@ -117,7 +130,11 @@ class Engine:
 
 
 def main():
-    engine = Engine('../../WebDevelopment/NodeTutorials/ExpressTutorial/crood/views')
+    collection_path = '../../WebDevelopment/NodeTutorials/ExpressTutorial/crood/views'
+
+    ex = ["cookie.ejs", collection_path + '/index.ejs', 'templates', 'blog.ejs', 'createpost']
+
+    engine = Engine(collection_path, excluded = ex)
     for doc in engine.documents:
         print (doc)
 
