@@ -170,36 +170,81 @@ class Engine:
         """
         or_operator = '|'
 
-        or_terms = list( map( self.filter_string, query.split(or_operator) ) )
-        print (or_terms)
+        # or_terms = list( map( self.filter_string, query.split(or_operator) ) )
+        or_terms = query.split(or_operator)
+        # print (or_terms)
 
         doc_ids = set()
         for term in or_terms:
             try:
-                doc_ids.update(self.inverted_index[term])
+                doc_ids.update(self.answer(term))
             except KeyError:
                 pass
 
         return doc_ids
 
 
+    def print_help(self, commands):
+        padding = max( list(map(lambda x: len(x), commands.keys())) )
+        print ("\n< Help >")
+        for k, v in commands.items():
+            print (k + " " * (padding + 2 - len(k)) + "-", v)
+
+
+    def print_results(self, results_docids):
+        print ("\n< Results >")
+        if not results_docids:
+            print ("No documents found!")
+        else:
+            for id in results_docids:
+                # print id for debugging purposes
+                print (id, self.documents[id])
+
+
+    def cli(self):
+        commands = {
+            "Exit": ";;",
+            "Index": ";;index",
+            "Docid": ";;docid",
+            "Help": ";;help"
+        }
+
+        self.print_help(commands)
+
+        query = input("\nSearch: ")
+        while query != commands["Exit"]:
+            if query in commands.values():
+                if query == commands["Help"]:
+                    self.print_help(commands)
+                elif query == commands["Index"]:
+                    self.print_inverted_index()
+                elif query == commands["Docid"]:
+                    self.print_docIds()
+            else:
+                results_docids = self.answer_bool(query)
+                self.print_results(results_docids)
+
+            query = input("\nSearch: ")
+
+
 def main():
-    collection_path = '../../WebDevelopment/NodeTutorials/ExpressTutorial/picoblog/views'
+    collections = [
+        {'path': '../../WebDevelopment/NodeTutorials/ExpressTutorial/picoblog/views',
+         'ex': ["cookie.ejs",
+                '../../WebDevelopment/NodeTutorials/ExpressTutorial/picoblog/views/index.ejs',
+                'templates',
+                'blog.ejs',
+                'createpost']},
+        {'path': './DocumentCollection',
+         'ex': []}
+    ]
 
-    ex = ["cookie.ejs", collection_path + '/index.ejs', 'templates', 'blog.ejs', 'createpost']
+    collection = collections[1]
 
-    engine = Engine(collection_path, excluded = ex)
-    for doc in engine.documents:
-        print (doc)
+    engine = Engine(collection['path'], excluded = collection['ex'])
 
-    engine.add_to_index('./engine.py')
-    engine.print_inverted_index()
-    engine.print_docIds()
-    answer_docids = engine.answer_bool('engine| typetext |   title')
+    engine.cli()
 
-    print ('< Answer >')
-    for id in answer_docids:
-        print(id, engine.documents[id])
 
 if __name__ == '__main__':
     main()
