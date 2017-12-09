@@ -122,6 +122,7 @@ def process_query(query, inverted_index):
 
     return list(doc_intersec)
 
+
 def print_results(results_docids, document_list):
     print ("\n< Results >")
     if not results_docids:
