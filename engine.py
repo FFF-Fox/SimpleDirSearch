@@ -48,14 +48,14 @@ class Engine:
 
 
     def filter_string(self, in_string):
-        """ Convert the data to lowercase and strip punctuation.
+        """ Convert the data to lowercase and remove punctuation.
             Input:
                 in_string: A string.
             Output:
                 out_string: The in_string converted to lowercase and stripped
                     of punctuation.
         """
-        in_string = in_string.lower()
+        in_string = in_string .strip() .lower()
 
         table = str.maketrans({key: None for key in string.punctuation})
         out_string = in_string.translate(table)
@@ -138,10 +138,8 @@ class Engine:
         """ Prints the documents with their docIds in an easy for the eye form.
         """
         print ("\n< Document IDs >")
-        # L = max( list(map(lambda x: len(x), self.documents)) )
         l = len(str(len(self.documents)))
         for i, doc in enumerate(self.documents):
-            # Lpadding = " " * (L - len(doc))
             lpadding = " " * (l - len(str(i)))
             print (str(i) + lpadding + " - " + doc)
 
@@ -163,8 +161,30 @@ class Engine:
         return doc_ids
 
 
+    def answer_bool(self, query):
+        """ Answers a query given in cnf form.
+            Input:
+                query: String containing the query of the user in conjuctive normal form.
+            Output:
+                doc_ids: A set containing the docIds of the resulting documents
+        """
+        or_operator = '|'
+
+        or_terms = list( map( self.filter_string, query.split(or_operator) ) )
+        print (or_terms)
+
+        doc_ids = set()
+        for term in or_terms:
+            try:
+                doc_ids.update(self.inverted_index[term])
+            except KeyError:
+                pass
+
+        return doc_ids
+
+
 def main():
-    collection_path = '../../WebDevelopmeent/NodeTutorials/ExpressTutorial/picoblog/views'
+    collection_path = '../../WebDevelopment/NodeTutorials/ExpressTutorial/picoblog/views'
 
     ex = ["cookie.ejs", collection_path + '/index.ejs', 'templates', 'blog.ejs', 'createpost']
 
@@ -172,10 +192,10 @@ def main():
     for doc in engine.documents:
         print (doc)
 
-    # engine.add_to_index('./engine.py')
+    engine.add_to_index('./engine.py')
     engine.print_inverted_index()
     engine.print_docIds()
-    answer_docids = engine.answer('engine')
+    answer_docids = engine.answer_bool('engine| typetext |   title')
 
     print ('< Answer >')
     for id in answer_docids:
