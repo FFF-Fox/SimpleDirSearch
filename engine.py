@@ -170,9 +170,7 @@ class Engine:
         """
         or_operator = '|'
 
-        # or_terms = list( map( self.filter_string, query.split(or_operator) ) )
         or_terms = query.split(or_operator)
-        # print (or_terms)
 
         doc_ids = set()
         for term in or_terms:
@@ -209,17 +207,20 @@ class Engine:
             "Help": ";;help"
         }
 
-        self.print_help(commands)
+        # self.print_help(commands)
+        print("Type ;;help for more commands.")
 
         query = input("\nSearch: ")
         while query != commands["Exit"]:
-            if query in commands.values():
+            if query[:2] == ";;":
                 if query == commands["Help"]:
                     self.print_help(commands)
                 elif query == commands["Index"]:
                     self.print_inverted_index()
                 elif query == commands["Docid"]:
                     self.print_docIds()
+                else:
+                    print ("Invalid command.")
             else:
                 results_docids = self.answer_bool(query)
                 self.print_results(results_docids)
@@ -236,6 +237,8 @@ def main():
                 'blog.ejs',
                 'createpost']},
         {'path': './DocumentCollection',
+         'ex': []},
+        {'path': './AnotherDocumentCollection',
          'ex': []}
     ]
 
