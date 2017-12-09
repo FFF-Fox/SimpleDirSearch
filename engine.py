@@ -230,12 +230,6 @@ class Engine:
 
 def main():
     collections = [
-        {'path': '../../WebDevelopment/NodeTutorials/ExpressTutorial/picoblog/views',
-         'ex': ["cookie.ejs",
-                '../../WebDevelopment/NodeTutorials/ExpressTutorial/picoblog/views/index.ejs',
-                'templates',
-                'blog.ejs',
-                'createpost']},
         {'path': './DocumentCollection',
          'ex': []},
         {'path': './AnotherDocumentCollection',
