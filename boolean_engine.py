@@ -149,7 +149,7 @@ class BooleanEngine:
             Output:
                 doc_ids: A list containing the docIds of the resulting documents.
         """
-        query = query.strip()
+        query = query .replace(" ", "")
 
         neg = False
         try:
