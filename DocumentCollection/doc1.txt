@@ -1,1 +1,1 @@
-This is a simple text document.
+This is a simple text document. Checking for multiple   spaces.

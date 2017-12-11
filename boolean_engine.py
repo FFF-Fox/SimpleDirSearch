@@ -1,8 +1,9 @@
 from os import walk
 import string
+import sys
 
 
-class Engine:
+class BooleanEngine:
     def __init__(self, collection_path='.', excluded=[], rf=True):
         self.inverted_index = {}
         self.documents = []
@@ -143,11 +144,11 @@ class Engine:
 
 
     def answer(self, query):
-        """ Answer the query of the user.
+        """ Answer a single term query of the user.
             Input:
-                query: String containing the query of the user.
+                query: String containing the query term of the user.
             Output:
-                doc_ids: A list containing the docIds of the resulting documents
+                doc_ids: A list containing the docIds of the resulting documents.
         """
         query = query.strip()
 
@@ -183,7 +184,6 @@ class Engine:
         and_operator = '&'
 
         clauses = query.split(and_operator)
-        # print (clauses)
         or_terms = clauses[0].split(or_operator)
 
         doc_ids = set()
@@ -205,7 +205,6 @@ class Engine:
                 except KeyError:
                     pass
 
-            # print (doc_ids, "&", clause_ids)
             doc_ids = doc_ids.intersection(clause_ids)
 
         return doc_ids
@@ -266,16 +265,17 @@ class Engine:
 
 
 def main():
-    collections = [
-        {'path': './DocumentCollection',
-         'ex': []},
-        {'path': './AnotherDocumentCollection',
-         'ex': []}
-    ]
+    if "-d" in sys.argv:
+        collection = sys.argv[sys.argv.index("-d") + 1]
+    else:
+        collection = "."
 
-    collection = collections[0]
+    if "-rf" in sys.argv:
+        a = True
+    else:
+        a = False
 
-    engine = Engine(collection['path'], excluded = collection['ex'])
+    engine = BooleanEngine(collection, excluded = [], rf = a)
 
     engine.cli()
 
