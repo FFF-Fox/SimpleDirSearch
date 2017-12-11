@@ -1,4 +1,4 @@
-from os import walk
+from os import walk, sep
 import string
 
 
@@ -24,12 +24,12 @@ class BooleanEngine:
         # Fill self.documents with the paths of the files in the given
         # collection_path and it's subdirectories
         for (dirpath, dirnames, filenames) in walk(collection_path):
-            self.documents.extend([ dirpath +'/'+ filename
+            self.documents.extend([ dirpath + sep + filename
                                     for filename in filenames
-                                    if not any( ex in dirpath.split('/')
+                                    if not any( ex in dirpath.split(sep)
                                                 or ex == filename
                                                 or ex == dirpath
-                                                or ex == dirpath +'/'+ filename
+                                                or ex == dirpath + sep + filename
                                                 for ex in excluded )
                                     ])
             if not rf:
@@ -270,7 +270,6 @@ def main():
 
     if "-d" in sys.argv:
         collection = sys.argv[sys.argv.index("-d") + 1]
-        print (sep)
         if collection[-1] == sep:
             n = len(collection) - 1
             collection = collection[:n]
