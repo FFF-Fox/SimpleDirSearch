@@ -167,8 +167,11 @@ class Engine:
                 doc_ids: A set containing the docIds of the resulting documents
         """
         or_operator = '|'
+        and_operator = '&'
 
-        or_terms = query.split(or_operator)
+        clauses = query.split(and_operator)
+        # print (clauses)
+        or_terms = clauses[0].split(or_operator)
 
         doc_ids = set()
         for term in or_terms:
@@ -176,6 +179,21 @@ class Engine:
                 doc_ids.update(self.answer(term))
             except KeyError:
                 pass
+
+        n = len(clauses)
+        for i in range(1, n):
+            or_terms = clauses[i].split(or_operator)
+
+            clause_ids = set()
+
+            for term in or_terms:
+                try:
+                    clause_ids.update(self.answer(term))
+                except KeyError:
+                    pass
+
+            # print (doc_ids, "&", clause_ids)
+            doc_ids = doc_ids.intersection(clause_ids)
 
         return doc_ids
 
@@ -212,7 +230,7 @@ class Engine:
         except EOFError:
             print ()
             query = commands["Exit"]
-            
+
         while query != commands["Exit"]:
             if query[:2] == ";;":
                 if query == commands["Help"]:
