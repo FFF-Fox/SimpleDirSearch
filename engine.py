@@ -1,6 +1,5 @@
 from os import walk
 import string
-from collections import Counter
 
 
 class Engine:
@@ -85,7 +84,6 @@ class Engine:
                 doc_id: (Optional) The docId of the document. If ommitted,
                     the docid is inferred.
         """
-
         if doc_id is None:
             try:
                 doc_id = self.documents.index(document)
@@ -207,10 +205,14 @@ class Engine:
             "Help": ";;help"
         }
 
-        # self.print_help(commands)
         print("Type ;;help for more commands.")
 
-        query = input("\nSearch: ")
+        try:
+            query = input("\nSearch: ")
+        except EOFError:
+            print ()
+            query = commands["Exit"]
+            
         while query != commands["Exit"]:
             if query[:2] == ";;":
                 if query == commands["Help"]:
@@ -225,7 +227,11 @@ class Engine:
                 results_docids = self.answer_bool(query)
                 self.print_results(results_docids)
 
-            query = input("\nSearch: ")
+            try:
+                query = input("\nSearch: ")
+            except EOFError:
+                print ()
+                query = commands["Exit"]
 
 
 def main():
@@ -236,7 +242,7 @@ def main():
          'ex': []}
     ]
 
-    collection = collections[1]
+    collection = collections[0]
 
     engine = Engine(collection['path'], excluded = collection['ex'])
 
