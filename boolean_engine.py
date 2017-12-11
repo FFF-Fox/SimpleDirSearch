@@ -1,6 +1,5 @@
 from os import walk
 import string
-import sys
 
 
 class BooleanEngine:
@@ -265,8 +264,16 @@ class BooleanEngine:
 
 
 def main():
+    from os import sep
+    import sys
+
+
     if "-d" in sys.argv:
         collection = sys.argv[sys.argv.index("-d") + 1]
+        print (sep)
+        if collection[-1] == sep:
+            n = len(collection) - 1
+            collection = collection[:n]
     else:
         collection = "."
 
