@@ -108,7 +108,7 @@ class BooleanEngine:
         """ Build the inverted index from the documents in the collection. """
         # Fill the index with all the appearences of each term in every
         # document.
-        for i, doc in enumerate(self.documents):
+        for doc in self.documents:
             self.add_to_index(doc)
 
 
