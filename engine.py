@@ -54,7 +54,7 @@ class Engine:
                 out_string: The in_string converted to lowercase and stripped
                     of punctuation.
         """
-        in_string = in_string .strip() .lower()
+        in_string = in_string .lower()
 
         table = str.maketrans({key: None for key in string.punctuation})
         out_string = in_string.translate(table)
@@ -149,12 +149,25 @@ class Engine:
             Output:
                 doc_ids: A list containing the docIds of the resulting documents
         """
+        query = query.strip()
+
+        neg = False
+        try:
+            if query[0] == '!':
+                neg = True
+        except IndexError:
+            pass
+
         filt_query = self.filter_string(query)
 
         if filt_query in self.inverted_index:
             doc_ids = self.inverted_index[filt_query]
         else:
             doc_ids = []
+
+        if neg:
+            doc_ids = [ i for i in range(len(self.documents))
+                          if i not in doc_ids ]
 
         return doc_ids
 
