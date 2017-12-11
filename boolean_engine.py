@@ -264,7 +264,6 @@ class BooleanEngine:
 
 
 def main():
-    from os import sep
     import sys
 
 
