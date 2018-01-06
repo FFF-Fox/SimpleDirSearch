@@ -1,7 +1,8 @@
-# SimpleDirSearch: A minimal directory search engine
+# Information Retrieval codebase
 
+## Contains implementations of models and other IR specific algorithms.
 
-## This is a simple search engine (based on the boolean retrieval model) that you can use to search for terms contained in the documents of a specified directory/collection.
+## boolean_engine.py: This is a simple search engine (based on the boolean retrieval model) that you can use to search for terms contained in the documents of a specified directory/collection.
 
 ### Uses:
   - Run the search engine in a CLI, where you can try subsequent searches.
