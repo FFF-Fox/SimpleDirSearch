@@ -19,5 +19,4 @@
   $ python boolean_engine.py -d DocumentCollection -rf
   ```
 
-### This is a work in progress.
 You can search using many terms separated by ```&```, ```|``` for logical AND, OR respectively and use ```!``` before a term to specify negation of the term. eg: ```Search: term1 & term2 | !term3```. The query is expressed using conjuctive normal form.
